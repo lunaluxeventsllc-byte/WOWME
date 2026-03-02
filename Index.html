@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LunaLux Events | Billionaire Luxury Experiences</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
+
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: 'Montserrat', sans-serif;
+    background: radial-gradient(circle at top, #111 0%, #000 70%);
+    color: #fff;
+    overflow-x: hidden;
+}
+
+/* GOLD PARTICLE BACKGROUND */
+canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: -1;
+}
+
+/* HEADER */
+header {
+    text-align:center;
+    padding:140px 20px;
+    position: relative;
+}
+
+/* LOGO SHIMMER */
+header img {
+    width:220px;
+    animation: shimmerLogo 4s infinite linear;
+}
+
+@keyframes shimmerLogo {
+    0% { filter: drop-shadow(0 0 5px gold); }
+    50% { filter: drop-shadow(0 0 30px gold); }
+    100% { filter: drop-shadow(0 0 5px gold); }
+}
+
+h1 {
+    font-family: 'Playfair Display', serif;
+    font-size:3.5rem;
+    margin-top:30px;
+    background: linear-gradient(90deg,#d4af37,#fff5cc,#d4af37);
+    -webkit-background-clip:text;
+    color:transparent;
+}
+
+.tagline {
+    margin-top:20px;
+    letter-spacing:3px;
+    font-weight:300;
+    opacity:0.8;
+}
+
+/* BUTTON */
+.btn {
+    display:inline-block;
+    margin-top:40px;
+    padding:18px 50px;
+    border:1px solid #d4af37;
+    color:#d4af37;
+    text-decoration:none;
+    letter-spacing:2px;
+    transition:0.4s;
+}
+
+.btn:hover {
+    background:#d4af37;
+    color:#000;
+    box-shadow:0 0 30px #d4af37;
+}
+
+/* SECTION */
+section {
+    padding:120px 10%;
+    text-align:center;
+    opacity:0;
+    transform: translateY(40px);
+    transition: all 1.2s ease;
+}
+
+section.visible {
+    opacity:1;
+    transform: translateY(0);
+}
+
+.section-title {
+    font-family:'Playfair Display', serif;
+    font-size:2.3rem;
+    margin-bottom:50px;
+    background: linear-gradient(90deg,#d4af37,#fff);
+    -webkit-background-clip:text;
+    color:transparent;
+}
+
+/* GALLERY */
+.gallery {
+    display:flex;
+    gap:30px;
+    justify-content:center;
+    flex-wrap:wrap;
+}
+
+.gallery img {
+    width:320px;
+    border-radius:16px;
+    transition:0.6s;
+    box-shadow:0 0 20px rgba(212,175,55,0.2);
+}
+
+.gallery img:hover {
+    transform:scale(1.08);
+    box-shadow:0 0 60px rgba(212,175,55,0.8);
+}
+
+/* CONTACT */
+.instagram a {
+    color:#d4af37;
+    text-decoration:none;
+}
+
+footer {
+    padding:60px;
+    font-size:12px;
+    opacity:0.4;
+}
+</style>
+</head>
+
+<body>
+
+<canvas id="particles"></canvas>
+
+<header>
+    <img src="logo.png" alt="LunaLux Logo">
+    <h1>LunaLux Events</h1>
+    <p class="tagline">Ultra-Luxury Event Experiences</p>
+    <a href="#contact" class="btn">INQUIRE NOW</a>
+</header>
+
+<section>
+    <h2 class="section-title">Signature Experiences</h2>
+    <div class="gallery">
+        <img src="gallery1.jpg">
+        <img src="gallery2.jpg">
+        <img src="gallery3.jpg">
+    </div>
+</section>
+
+<section id="contact">
+    <h2 class="section-title">Private Inquiries</h2>
+    <p>Email: contact@lunaluxevents.com</p>
+    <div class="instagram">
+        Follow us on Instagram<br>
+        <a href="https://instagram.com/lunaluxeventsllc" target="_blank">
+            @lunaluxeventsllc
+        </a>
+    </div>
+</section>
+
+<footer>
+    © 2026 LunaLux Events. All rights reserved.
+</footer>
+
+<script>
+/* GOLD PARTICLES */
+const canvas = document.getElementById("particles");
+const ctx = canvas.getContext("2d");
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+let particlesArray = [];
+
+class Particle {
+    constructor() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.size = Math.random() * 2;
+        this.speedY = Math.random() * 0.5 + 0.2;
+    }
+    update() {
+        this.y -= this.speedY;
+        if (this.y < 0) this.y = canvas.height;
+    }
+    draw() {
+        ctx.fillStyle = "rgba(212,175,55,0.8)";
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fill();
+    }
+}
+
+function init() {
+    for (let i = 0; i < 120; i++) {
+        particlesArray.push(new Particle());
+    }
+}
+
+function animate() {
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    particlesArray.forEach(p => {
+        p.update();
+        p.draw();
+    });
+    requestAnimationFrame(animate);
+}
+
+init();
+animate();
+
+/* SCROLL ANIMATION */
+const sections = document.querySelectorAll("section");
+window.addEventListener("scroll", () => {
+    sections.forEach(section => {
+        const position = section.getBoundingClientRect().top;
+        if (position < window.innerHeight - 100) {
+            section.classList.add("visible");
+        }
+    });
+});
+</script>
+
+</body>
+</html>
